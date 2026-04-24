@@ -1,5 +1,4 @@
-// Parameters help keep the code flexible
-param location string = 'westus'
+param location string
 
 // 1. Create the HUB Network
 module hubVnet './modules/vnet.bicep' = {

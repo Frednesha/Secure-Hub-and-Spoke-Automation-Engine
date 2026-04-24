@@ -1,0 +1,38 @@
+name: Azure Infrastructure Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout the code from your repo
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Log into Azure using the secret we created
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 3. Validate your Bicep files (The "Check" phase)
+      - name: Validate Bicep
+        uses: azure/arm-deploy@v1
+        with:
+          deploymentName: 'Validate-HubSpoke'
+          resourceGroupName: 'hub-spoke-project' # Ensure this RG exists
+          template: ./main.bicep
+          deploymentMode: Validate
+
+      # 4. Deploy the Infrastructure (The "Action" phase)
+      - name: Deploy Infrastructure
+        if: github.ref == 'refs/heads/main'
+        uses: azure/arm-deploy@v1
+        with:
+          deploymentName: 'Deploy-HubSpoke'
+          resourceGroupName: 'hub-spoke-project'
+          template: ./main.bicep
+          parameters: ./azuredeploy.parameters.json

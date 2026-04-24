@@ -44,7 +44,7 @@ module hubToBanking './modules/peering.bicep' = {
     remoteVnetName: bankingSpoke.outputs.vnetName
     remoteVnetId: bankingSpoke.outputs.vnetId
   }
-  dependsOn: [ hubVnet, bankingSpoke ]
+  //dependsOn: [ hubVnet, bankingSpoke ]
 }
 
 // 5. Peer BANKING back to HUB
@@ -55,5 +55,5 @@ module bankingToHub './modules/peering.bicep' = {
     remoteVnetName: hubVnet.outputs.vnetName
     remoteVnetId: hubVnet.outputs.vnetId
   }
-  dependsOn: [ hubVnet, bankingSpoke ]
+  //dependsOn: [ hubVnet, bankingSpoke ]
 }

@@ -27,7 +27,7 @@ jobs:
         uses: azure/arm-deploy@v2 # Upgrading to v2
         with:
           deploymentName: 'Validate-HubSpoke'
-          resourceGroupName: 'RG-Project-Prod'
+          resourceGroupName: 'hub-spoke-project'
           template: ./main.bicep
           deploymentMode: Validate
           parameters: ./azuredeploy.parameters.json # Using the inline parameter we discussed

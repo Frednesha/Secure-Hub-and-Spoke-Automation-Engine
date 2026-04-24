@@ -1,4 +1,4 @@
-param location string
+param location string = 'westus'
 
 // 1. Create the HUB Network
 module hubVnet './modules/vnet.bicep' = {

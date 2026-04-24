@@ -57,3 +57,26 @@ module bankingToHub './modules/peering.bicep' = {
   }
   //dependsOn: [ hubVnet, bankingSpoke ]
 }
+
+// 6. Peer HUB to PAYROLL
+module hubToPayroll './modules/peering.bicep' = {
+  name: 'hubToPayrollPeering'
+  params: {
+    localVnetName: hubVnet.outputs.vnetName // Output from your Hub module
+    remoteVnetName: payrollSpoke.outputs.vnetName
+    remoteVnetId: payrollSpoke.outputs.vnetId
+  }
+  //dependsOn: [ hubVnet, payrollSpoke ]
+}
+
+// 5. Peer PAYROLL back to HUB
+module payrollToHub './modules/peering.bicep' = {
+  name: 'payrollToHubPeering'
+  params: {
+    localVnetName: payrollSpoke.outputs.vnetName
+    remoteVnetName: hubVnet.outputs.vnetName
+    remoteVnetId: hubVnet.outputs.vnetId
+  }
+  //dependsOn: [ hubVnet, payrollSpoke ]
+}
+

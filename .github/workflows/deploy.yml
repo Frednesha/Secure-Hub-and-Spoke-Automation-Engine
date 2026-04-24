@@ -19,12 +19,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          # This pulls the specific fields out of your JSON secret
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          # These two lines are often required by v2 to avoid the "Not all values present" error
-          client-id: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          tenant-id: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
-          subscription-id: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+          # This tells the action: "Don't look for OIDC tokens, use my JSON secret."
+          auth-type: SERVICE_PRINCIPAL
 
       - name: Validate Bicep
         uses: azure/arm-deploy@v2 # Upgrading to v2

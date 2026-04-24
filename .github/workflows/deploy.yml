@@ -4,35 +4,26 @@ on:
   push:
     branches: [ "main" ]
 
+# Pro-Tip: Explicitly opt-in to the new runtime to remove the warning
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   validate-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the code from your repo
+      # Use v6 (or the latest 2026 release) for Node 24 support
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6 
 
-      # 2. Log into Azure using the secret we created
       - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        uses: azure/login@v2 
 
-      # 3. Validate your Bicep files (The "Check" phase)
       - name: Validate Bicep
-        uses: azure/arm-deploy@v1
+        uses: azure/arm-deploy@v2 # Upgrading to v2
         with:
           deploymentName: 'Validate-HubSpoke'
-          resourceGroupName: 'hub-spoke-project' # Ensure this RG exists
+          resourceGroupName: 'RG-Project-Prod'
           template: ./main.bicep
           deploymentMode: Validate
-
-      # 4. Deploy the Infrastructure (The "Action" phase)
-      - name: Deploy Infrastructure
-        if: github.ref == 'refs/heads/main'
-        uses: azure/arm-deploy@v1
-        with:
-          deploymentName: 'Deploy-HubSpoke'
-          resourceGroupName: 'hub-spoke-project'
-          template: ./main.bicep
-          parameters: ./azuredeploy.parameters.json
+          parameters: ./azuredeploy.parameters.json # Using the inline parameter we discussed

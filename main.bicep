@@ -21,6 +21,7 @@ module bankingSpoke './modules/vnet.bicep' = {
     vnetAddressPrefix: '10.1.0.0/16'
     subnetName: 'snet-banking-apps'
     subnetAddressPrefix: '10.1.1.0/24'
+    networkSecurityGroupId: spokeNsg.outputs.nsgId // Passing the NSG ID here
   }
 }
 
@@ -89,15 +90,3 @@ module spokeNsg './modules/nsg.bicep' = {
   }
 }
 
-// 7. Update your Banking Spoke to use the NSG
-module bankingSpoke './modules/vnet.bicep' = {
-  name: 'bankingSpokeDeployment'
-  params: {
-    vnetName: 'vnet-spoke-banking-001'
-    location: location
-    vnetAddressPrefix: '10.1.0.0/16'
-    subnetName: 'snet-banking-apps'
-    subnetAddressPrefix: '10.1.1.0/24'
-    networkSecurityGroupId: spokeNsg.outputs.nsgId // Passing the NSG ID here
-  }
-}

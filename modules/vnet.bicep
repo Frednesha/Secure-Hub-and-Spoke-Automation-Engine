@@ -5,20 +5,24 @@ param vnetAddressPrefix string
 param subnetName string
 param subnetAddressPrefix string
 
+param networkSecurityGroupId string = '' // New parameter
+
 resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   name: vnetName
   location: location
   properties: {
     addressSpace: {
-      addressPrefixes: [
-        vnetAddressPrefix
-      ]
+      addressPrefixes: [vnetAddressPrefix]
     }
     subnets: [
       {
         name: subnetName
         properties: {
           addressPrefix: subnetAddressPrefix
+          // This line attaches the NSG if one is provided
+          networkSecurityGroup: empty(networkSecurityGroupId) ? null : {
+            id: networkSecurityGroupId
+          }
         }
       }
     ]

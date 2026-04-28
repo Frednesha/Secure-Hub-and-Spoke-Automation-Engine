@@ -34,6 +34,7 @@ module payrollSpoke './modules/vnet.bicep' = {
     vnetAddressPrefix: '10.2.0.0/16'
     subnetName: 'snet-payroll-data'
     subnetAddressPrefix: '10.2.1.0/24'
+    networkSecurityGroupId: spokeNsg.outputs.nsgId // Passing the NSG ID here
   }
 }
 
